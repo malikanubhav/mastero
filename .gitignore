@@ -1,0 +1,36 @@
+# node & workspaces
+node_modules/
+**/node_modules/
+
+# builds
+dist/
+build/
+out/
+.vite/
+.next/
+.cache/
+
+# env/secrets
+.env
+.env.local
+.env.*.local
+**/.env
+**/.env.local
+**/.env.*.local
+backend/config/config.json
+
+# logs
+npm-debug.log*
+yarn-*.log
+pnpm-debug.log*
+
+# tests/coverage
+coverage/
+*.lcov
+
+# OS/Editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
