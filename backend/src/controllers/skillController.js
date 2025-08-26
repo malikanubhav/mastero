@@ -1,5 +1,6 @@
 import { Op } from "sequelize";
 import { Skill } from "../../models/index.js";
+import { pagination } from "../routes/middlewares/pagination.js";
 
 
 
@@ -31,9 +32,15 @@ const listSkills = async (req, res) => {
         const where = search ? { name: { [Op.like]: `%${search}%` } } : undefined;
 
         const offset = (req.page - 1) * req.limit;
-        const { rows, count } = await Skill.findAndCountAll({where,order: [["name", "ASC"]]});
+        const { rows, count } = await Skill.findAndCountAll({  where,
+            limit: req.limit,
+            offset: req.offset,
+            order: [["name", "ASC"]],});
 
-        return res.json({data: rows,total: count});
+        return res.json({data: rows, page: req.page,
+            limit: req.limit,
+            total: count,
+            totalPages: Math.ceil(count / req.limit),});
     } catch (err) {
         console.error("listSkills error:", err);
         return res.status(500).json({ error: "Server error" });

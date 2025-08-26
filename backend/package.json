@@ -2,9 +2,14 @@
   "name": "backend",
   "version": "1.0.0",
   "main": "index.js",
+  "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon src/app.js"
+    "test": "cross-env NODE_ENV=test jest --runInBand",
+    "dev": "nodemon src/app.js",
+    "jest": {
+      "testEnvironment": "node",
+      "transform": {}
+    }
   },
   "keywords": [],
   "author": "",
@@ -24,6 +29,9 @@
     "zod": "^4.1.1"
   },
   "devDependencies": {
-    "sequelize-cli": "^6.6.3"
+    "cross-env": "^10.0.0",
+    "jest": "^30.0.5",
+    "sequelize-cli": "^6.6.3",
+    "supertest": "^7.1.4"
   }
 }
