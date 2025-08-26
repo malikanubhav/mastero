@@ -17,7 +17,6 @@ out/
 **/.env
 **/.env.local
 **/.env.*.local
-backend/config/config.json
 
 # logs
 npm-debug.log*
