@@ -28,6 +28,3 @@ npm run dev
 
 Frontend runs on: http://localhost:5173
 
-## Default Accounts
-- **Admin** → admin@example.com / admin123
-- **User** → user@example.com / user123
