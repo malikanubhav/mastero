@@ -1,0 +1,17 @@
+{
+    "$schema": "https://docs.railway.com/reference/railway.schema.json",
+    "build": {
+        "builder": "NIXPACKS",
+        "watchPatterns": [
+            "src/**",
+            "package.json",
+            "package-lock.json"
+        ]
+    },
+    "deploy": {
+        "startCommand": "npm run start",
+        "healthcheckPath": "/health",
+        "healthcheckTimeout": 120,
+        "restartPolicyType": "ALWAYS"
+    }
+}

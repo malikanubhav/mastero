@@ -10,6 +10,6 @@ COPY . .
 
 # Env + health
 ENV NODE_ENV=production
-EXPOSE 3000
+EXPOSE 777
 # IMPORTANT: Your app must read process.env.PORT; Railway sets it
 CMD ["node", "src/app.js"]
