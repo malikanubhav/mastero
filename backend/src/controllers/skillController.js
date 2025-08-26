@@ -16,7 +16,7 @@ const createSkill = async (req, res) => {
         });
         console.log(name, description);
         if (exists) return res.status(409).json({ error: "skill already exists" });
-        const skill = await Skill.create({ name: name, description: description});
+        const skill = await Skill.create({ name: name, description: description });
         return res.status(201).json({ message: "skill created successfully", skill });
     } catch (err) {
         console.error("createSkill :", err);
@@ -32,15 +32,19 @@ const listSkills = async (req, res) => {
         const where = search ? { name: { [Op.like]: `%${search}%` } } : undefined;
 
         const offset = (req.page - 1) * req.limit;
-        const { rows, count } = await Skill.findAndCountAll({  where,
+        const { rows, count } = await Skill.findAndCountAll({
+            where,
             limit: req.limit,
             offset: req.offset,
-            order: [["name", "ASC"]],});
+            order: [["name", "ASC"]],
+        });
 
-        return res.json({data: rows, page: req.page,
+        return res.json({
+            data: rows, page: req.page,
             limit: req.limit,
             total: count,
-            totalPages: Math.ceil(count / req.limit),});
+            totalPages: Math.ceil(count / req.limit),
+        });
     } catch (err) {
         console.error("listSkills error:", err);
         return res.status(500).json({ error: "Server error" });
@@ -103,4 +107,4 @@ const deleteSkill = async (req, res) => {
 };
 
 
-export {createSkill, listSkills, deleteSkill, updateSkill, getSkill};
+export { createSkill, listSkills, deleteSkill, updateSkill, getSkill };

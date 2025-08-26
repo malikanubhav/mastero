@@ -1,0 +1,10 @@
+.git
+node_modules
+**/node_modules
+**/.vite
+**/.cache
+Dockerfile*
+docker-compose.yml
+*.log
+.env
+**/.env

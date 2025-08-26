@@ -1,0 +1,41 @@
+version: "3.9"
+
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.backend
+    container_name: mastero-backend
+    environment:
+      NODE_ENV: production
+      PORT: 777
+      # add DB envs here, e.g.:
+      # DB_HOST: ...
+      # DB_USER: ...
+      # DB_PASS: ...
+    ports:
+      - "7777:777"                  # host:container
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:777/health"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+    networks: [appnet]
+
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+      args:
+        VITE_API_URL: "http://backend:777"
+    container_name: mastero-frontend
+    depends_on:
+      backend:
+        condition: service_healthy
+    ports:
+      - "8080:80"                  
+    networks: [appnet]
+
+networks:
+  appnet:
+    driver: bridge

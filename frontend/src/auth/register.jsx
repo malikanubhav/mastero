@@ -1,4 +1,3 @@
-// src/auth/Register.jsx
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
@@ -59,7 +58,6 @@ export default function Register() {
                 )}
 
                 <form onSubmit={submit} className="space-y-4">
-                    {/* Name */}
                     <div>
                         <label className="block text-sm font-medium mb-1">Name</label>
                         <input
@@ -72,7 +70,6 @@ export default function Register() {
                         />
                     </div>
 
-                    {/* Email */}
                     <div>
                         <label className="block text-sm font-medium mb-1">Email</label>
                         <input
@@ -85,7 +82,6 @@ export default function Register() {
                         />
                     </div>
 
-                    {/* Password */}
                     <div>
                         <label className="block text-sm font-medium mb-1">Password</label>
                         <div className="flex">
@@ -107,7 +103,6 @@ export default function Register() {
                         </div>
                     </div>
 
-                    {/* Submit */}
                     <button
                         type="submit"
                         disabled={loading}

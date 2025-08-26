@@ -4,12 +4,9 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "test": "cross-env NODE_ENV=test jest --runInBand",
+    "test": "cross-env NODE_ENV=test jest --runInBand --passWithNoTests",
     "dev": "nodemon src/app.js",
-    "jest": {
-      "testEnvironment": "node",
-      "transform": {}
-    }
+    "start": "node src/app.js"
   },
   "keywords": [],
   "author": "",

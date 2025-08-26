@@ -5,7 +5,7 @@ const nonEmpty = (s) => typeof s === "string" && s.trim().length > 0;
 const isArray = (v) => Array.isArray(v);
 const inRange = (n, min, max) => Number.isInteger(n) && n >= min && n <= max;
 const allowedDifficulties = new Set(["easy", "medium", "hard"]);
-
+ 
 
 async function validatePayload(payload, { requireAll = true } = {}) {
     const errors = [];
@@ -88,25 +88,51 @@ export const createQuestion = async (req, res) => {
 
 export const listQuestions = async (req, res) => {
     try {
-        const skill_id = req.query.skill_id ? Number(req.query.skill_id) : undefined;
-        const search = (req.query.search || "").trim();
 
-        const page = Math.max(parseInt(req.query.page ?? "1", 10), 1);
-        const limit = Math.min(Math.max(parseInt(req.query.limit ?? "10", 10), 1), 100);
-        const offset = (page - 1) * limit;
-
+        const { skill_id, difficulty, active, search } = req.query || {};
         const where = {};
-        if (Number.isInteger(skill_id)) where.skill_id = skill_id;
-        if (search) where.text = { [Op.like]: `%${search}%` };
+
+        if (skill_id) where.skill_id = Number(skill_id);
+        if (difficulty) where.difficulty = difficulty;         
+        if (active !== undefined) where.is_active = active === "true" || active === "1";
+        if (search && search.trim()) where.text = { [Op.like]: `%${search.trim()}%` };
+
+        const offset = (req.page - 1) * req.limit;
 
         const { rows, count } = await Question.findAndCountAll({
             where,
-            order: [["id", "DESC"]],
-            limit,
+            include: [{ model: Skill, attributes: ["id", "name"] }],
+            order: [["updatedAt", "DESC"]],
+            limit: req.limit,
             offset,
         });
 
-        return res.json({ data: rows });
+        return res.json({
+            data: rows,
+            page: req.page,
+            limit: req.limit,
+            total: count,
+            totalPages: Math.ceil(count / req.limit),
+        });
+        // const skill_id = req.query.skill_id ? Number(req.query.skill_id) : undefined;
+        // const search = (req.query.search || "").trim();
+
+        // const page = Math.max(parseInt(req.query.page ?? "1", 10), 1);
+        // const limit = Math.min(Math.max(parseInt(req.query.limit ?? "10", 10), 1), 100);
+        // const offset = (page - 1) * limit;
+
+        // const where = {};
+        // if (Number.isInteger(skill_id)) where.skill_id = skill_id;
+        // if (search) where.text = { [Op.like]: `%${search}%` };
+
+        // const { rows, count } = await Question.findAndCountAll({
+        //     where,
+        //     order: [["id", "DESC"]],
+        //     limit,
+        //     offset,
+        // });
+
+        // return res.json({ data: rows });
     } catch (err) {
         console.error("listQuestions error:", err);
         return res.status(500).json({ error: "Server error" });

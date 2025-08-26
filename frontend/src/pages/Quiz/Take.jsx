@@ -19,7 +19,6 @@ export default function QuizTake() {
   const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
-    // If user refreshes and we lost questions, we can fetch detail later; for now, send them back to start.
     if (!questions || questions.length === 0) {
       nav("/quiz/start");
     }

@@ -1,4 +1,3 @@
-// src/auth/Login.jsx
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
@@ -60,7 +59,6 @@ export default function Login() {
         )}
 
         <form onSubmit={submit} className="space-y-4">
-          {/* Email */}
           <div>
             <label className="block text-sm font-medium mb-1">Email</label>
             <input
@@ -73,7 +71,6 @@ export default function Login() {
             />
           </div>
 
-          {/* Password */}
           <div>
             <label className="block text-sm font-medium mb-1">Password</label>
             <div className="flex">
@@ -95,7 +92,6 @@ export default function Login() {
             </div>
           </div>
 
-          {/* Submit */}
           <button
             type="submit"
             disabled={loading}

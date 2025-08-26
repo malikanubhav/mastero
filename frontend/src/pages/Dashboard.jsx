@@ -1,4 +1,3 @@
-// src/pages/Dashboard.jsx
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -52,7 +51,6 @@ export default function Dashboard() {
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-8">
-      {/* Greeting + quick user actions */}
       <div className="mb-6 flex items-center justify-between">
         <div>
           <h2 className="text-2xl font-bold">
@@ -68,7 +66,6 @@ export default function Dashboard() {
         </button>
       </div>
 
-      {/* Quick actions (role-aware) */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         <Card
           title="Start a Quiz"
@@ -112,7 +109,6 @@ export default function Dashboard() {
         )}
       </div>
 
-      {/* Stats */}
       <section className="mt-8">
         <h3 className="text-lg font-semibold mb-3">Quick Stats</h3>
         {loading ? (

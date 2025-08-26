@@ -28,7 +28,6 @@ export default function AdminUsers() {
 
     useEffect(() => {
         fetchIt(1);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const canPrev = page > 1;

@@ -1,90 +1,72 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
+import {api} from "../../utils/api.jsx";
+import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from "recharts";
 
-const apiRS = axios.create({ baseURL: import.meta.env.VITE_API_URL || "http://localhost:777" });
-apiRS.interceptors.request.use((c) => {
-    const t = localStorage.getItem("token");
-    if (t) c.headers.Authorization = `Bearer ${t}`;
-    return c;
-});
+const COLORS = ["#8884d8", "#82ca9d", "#ffc658", "#ff7f50"];
 
 export default function MySummary() {
-    const [data, setData] = useState(null);
-    const [err, setErr] = useState("");
+    const [summary, setSummary] = useState(null);
 
     useEffect(() => {
         (async () => {
-            try {
-                const { data } = await apiRS.get("/reports/me/summary");
-                setData(data);
-            } catch (e) {
-                setErr(e?.response?.data?.error || "Failed to load");
-            }
+            const { data } = await api.get("/reports/me/summary");
+            setSummary(data?.summary || null);
         })();
     }, []);
 
-    if (err) return <div className="p-6 text-red-600">{err}</div>;
-    if (!data) return <div className="p-6">Loading…</div>;
+    if (!summary) {
+        return <div className="p-6">Loading…</div>;
+    }
 
-    const s = data.summary || {};
-    const recent = data.recent || [];
+    const chartData = [
+        { name: "Attempts", value: Number(summary.attempts || 0) },
+        { name: "Total Questions", value: Number(summary.total_questions || 0) },
+        { name: "Total Score", value: Number(summary.total_score || 0) },
+    ];
 
     return (
-        <div className="max-w-5xl mx-auto p-6">
-            <h2 className="text-2xl font-bold mb-4">My Summary</h2>
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-                <Stat label="Attempts" value={num(s.attempts)} />
-                <Stat label="Total Score" value={num(s.total_score)} />
-                <Stat label="Total Questions" value={num(s.total_questions)} />
-                <Stat label="Avg Score" value={fix(s.avg_score)} />
-            </div>
-
-            <h3 className="text-lg font-semibold mb-2">Recent Attempts</h3>
-            {recent.length === 0 ? (
-                <div className="text-gray-600">No attempts yet.</div>
-            ) : (
-                <div className="overflow-x-auto border rounded-lg bg-white">
-                    <table className="min-w-full text-sm">
-                        <thead className="bg-gray-50">
-                            <tr>
-                                <th className="text-left p-3">ID</th>
-                                <th className="text-left p-3">Skill</th>
-                                <th className="text-left p-3">Score</th>
-                                <th className="text-left p-3">Questions</th>
-                                <th className="text-left p-3">Duration (s)</th>
-                                <th className="text-left p-3">Status</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {recent.map((r) => (
-                                <tr key={r.id} className="border-t">
-                                    <td className="p-3">{r.id}</td>
-                                    <td className="p-3">{r.Skill?.name || r.skill_id}</td>
-                                    <td className="p-3">{r.score}</td>
-                                    <td className="p-3">{r.total_questions}</td>
-                                    <td className="p-3">{r.duration_seconds}</td>
-                                    <td className="p-3">{r.status}</td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
+        <div className="p-6 max-w-5xl mx-auto">
+            <h2 className="text-2xl font-bold mb-3">My Summary</h2>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div className="bg-white border rounded-xl p-4 h-80">
+                    <ResponsiveContainer width="100%" height="100%">
+                        <PieChart>
+                            <Pie
+                                data={chartData}
+                                dataKey="value"
+                                nameKey="name"
+                                label
+                                outerRadius="80%"
+                            >
+                                {chartData.map((_, idx) => (
+                                    <Cell key={idx} fill={COLORS[idx % COLORS.length]} />
+                                ))}
+                            </Pie>
+                            <Tooltip />
+                            <Legend />
+                        </PieChart>
+                    </ResponsiveContainer>
                 </div>
-            )}
+
+                <div className="bg-white border rounded-xl p-4">
+                    <div className="text-sm text-gray-600">Totals</div>
+                    <div className="mt-2 grid grid-cols-2 gap-4">
+                        <Stat label="Attempts" value={summary.attempts} />
+                        <Stat label="Total Questions" value={summary.total_questions} />
+                        <Stat label="Total Score" value={summary.total_score} />
+                        <Stat label="Avg Score" value={Number(summary.avg_score || 0).toFixed(2)} />
+                    </div>
+                </div>
+            </div>
         </div>
     );
 }
 
 function Stat({ label, value }) {
     return (
-        <div className="bg-white rounded-xl shadow-sm border p-4">
-            <div className="text-sm text-gray-500">{label}</div>
-            <div className="text-2xl font-bold">{value}</div>
+        <div className="bg-gray-50 border rounded-lg p-4">
+            <div className="text-gray-500 text-sm">{label}</div>
+            <div className="text-xl font-semibold">{value}</div>
         </div>
     );
 }
-const num = (v) => (Number.isFinite(Number(v)) ? Number(v) : 0);
-const fix = (v) => {
-    const n = Number(v);
-    return Number.isFinite(n) ? n.toFixed(2) : "0.00";
-};
