@@ -1,25 +1,17 @@
-# Build stage
-FROM node:22.12.0 AS build
+FROM node:22.12.0 AS deps
 WORKDIR /app
 
-# Use workspaces: copy root manifests, then frontend manifest
 COPY package*.json ./
 COPY frontend/package*.json frontend/
 
-# Install ONLY the frontend workspace deps using root lockfile
 RUN npm ci --workspace frontend
 
-# Copy frontend source
 COPY frontend ./frontend
 
-# Build with API URL pointing to compose service name "backend" (internal DNS)
 ARG VITE_API_URL=http://backend:777
 ENV VITE_API_URL=${VITE_API_URL}
 WORKDIR /app/frontend
 RUN npm run build
 
-# Serve with nginx
-FROM nginx:stable-alpine
-# Optional custom config for caching/security
 EXPOSE 5173
 CMD ["nginx", "-g", "daemon off;"]
