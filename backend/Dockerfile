@@ -1,4 +1,4 @@
-FROM node:22-alpine
+FROM node:22.12.0
 
 # Install deps efficiently
 WORKDIR /app
