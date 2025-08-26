@@ -1,0 +1,13 @@
+{
+    "$schema": "https://docs.railway.com/reference/railway.schema.json",
+    "build": {
+        "builder": "NIXPACKS",
+        "buildCommand": "pwd && ls -la && test -f package-lock.json || (echo 'Root lockfile missing' && exit 1); npm ci --omit=dev && npm run -w backend build --if-present"
+    },
+    "deploy": {
+        "startCommand": "npm run -w backend start",
+        "healthcheckPath": "/health",
+        "healthcheckTimeout": 120,
+        "restartPolicyType": "ALWAYS"
+    }
+}
