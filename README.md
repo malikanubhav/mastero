@@ -28,3 +28,12 @@ npm run dev
 
 Frontend runs on: http://localhost:5173
 
+
+Admin
+Anubhav@gmail.com
+Anubhav123@
+
+
+User
+Anushka@gmail.com  
+Anushka123@
