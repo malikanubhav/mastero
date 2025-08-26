@@ -1,16 +1,15 @@
 FROM node:22-alpine
+
+# Install deps efficiently
 WORKDIR /app
-
 COPY package*.json ./
-COPY backend/package*.json backend/
+RUN npm ci --omit=dev
 
-RUN npm ci --omit=dev --workspace backend
+# Copy backend source
+COPY . .
 
-COPY backend ./backend
-
+# Env + health
 ENV NODE_ENV=production
-ENV PORT=777
-WORKDIR /app/backend
-EXPOSE 777
-
-CMD ["npm", "start"]
+EXPOSE 3000
+# IMPORTANT: Your app must read process.env.PORT; Railway sets it
+CMD ["node", "src/app.js"]
