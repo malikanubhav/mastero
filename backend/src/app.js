@@ -37,7 +37,7 @@ app.use('/quizzes', quizRouter);
 app.use('/reports', reportRouter);
 
 app.use("/health", (req, res) => {
-    return "ok";
+     res.json({});
 });
 app.listen(777);
 
