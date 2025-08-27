@@ -44,7 +44,7 @@ export default function Dashboard() {
   const logout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
-    nav("/login");
+    window.location.href="/login";
   };
 
   const isAdmin = user?.role === "admin";

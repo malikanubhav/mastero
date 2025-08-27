@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
 
@@ -21,7 +21,13 @@ export default function Login() {
   const [showPwd, setShowPwd] = useState(false);
   const [loading, setLoading] = useState(false);
   const [err, setErr] = useState("");
-
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem("user");
+      if(raw != null)window.location.href="/" 
+    } catch {
+    }
+  }, []);
   const submit = async (e) => {
     e.preventDefault();
     setErr("");
@@ -34,7 +40,7 @@ export default function Login() {
       const { data } = await axiosInstance.post("/user/login", { email, password });
       localStorage.setItem("token", data.token);
       localStorage.setItem("user", JSON.stringify(data.user));
-      nav("/");
+      window.location.href = "/";
     } catch (e) {
       const msg =
         e?.response?.data?.error ||
