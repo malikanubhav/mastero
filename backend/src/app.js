@@ -13,12 +13,10 @@ app.use(express.json());
 const ALLOWED_ORIGINS = [
     "http://localhost:5173",
     "http://localhost:3000",
+    "https://airy-happiness-prod.up.railway.app/",
     process.env.WEB_ORIGIN
   ].filter(Boolean);
-// app.use(cors({
-//     origin: "http://localhost:5173",
-//     credentials: true,
-// }));
+
 
 app.use(
     cors({
