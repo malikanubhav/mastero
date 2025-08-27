@@ -10,7 +10,7 @@ import cors from "cors";
 const app = express();
 app.use(helmet());
 app.use(express.json());
-const ALLOWED_ORIGINS = [
+const allowlist = [
     "http://localhost:5173",
     "http://localhost:3000",
     "https://airy-happiness-prod.up.railway.app/",
@@ -18,15 +18,21 @@ const ALLOWED_ORIGINS = [
   ].filter(Boolean);
 
 
-app.use(
-    cors({
-      origin: (origin, cb) => {
-        if (!origin || ALLOWED_ORIGINS.includes(origin)) return cb(null, true);
-        return cb(new Error("CORS not allowed"), false);
-      },
-      credentials: true
-    })
-  );
+  const USE_CREDENTIALS = false;
+
+  const corsOptions = {
+    origin(origin, cb) {
+      if (!origin) return cb(null, true);
+      if (allowlist.includes(origin)) return cb(null, true);
+      return cb(new Error("Not allowed by CORS"));
+    },
+    methods: ["GET","POST","PUT","PATCH","DELETE","OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+    credentials: USE_CREDENTIALS
+  };
+  
+  app.options("*", cors(corsOptions));
+  app.use(cors(corsOptions));
 
 app.use('/user', userRouter);
 app.use('/skills', skillRouter);
