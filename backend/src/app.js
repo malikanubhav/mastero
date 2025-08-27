@@ -31,7 +31,7 @@ const allowlist = [
     credentials: USE_CREDENTIALS
   };
   
-  app.options("*", cors(corsOptions));
+  app.options(/.*/, cors(corsOptions));
   app.use(cors(corsOptions));
 
 app.use('/user', userRouter);
